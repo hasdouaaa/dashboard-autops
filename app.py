@@ -37,7 +37,7 @@ def main_page():
 
     if uploaded_file:
         df = load_data(uploaded_file)
-        st.title("📊 Tableau de Bord - Analyse des Logs")
+        st.title("📊 Tableau de Bord - Analyse des visites à AUTOPS ")
 
         menu = st.radio(
             "Navigation", 
