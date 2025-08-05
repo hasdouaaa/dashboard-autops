@@ -52,10 +52,14 @@ def apply_filters(df):
             df = df[df['heure'].isin(selected)]
 
     if 'bottype' in df.columns:
-        bots = df['bottype'].dropna().unique()
-        selected = st.sidebar.multiselect("🤖 BotType", bots)
-        if selected:
-            df = df[df['bottype'].isin(selected)]
+    st.sidebar.markdown("### 🧠 Type de visiteur")
+    bot_filter = st.sidebar.radio("Filtrer par :", ["Tous", "Humain", "Bots"])
+
+    if bot_filter == "Humain":
+        df = df[df['bottype'] == "Human"]
+    elif bot_filter == "Bots":
+        df = df[df['bottype'] != "Human"]
+
 
     return df
 
@@ -156,5 +160,6 @@ def overview_page(df):
             st.plotly_chart(chart['fig'], use_container_width=True)
     else:
         st.info("Aucun graphique personnalisé ajouté.")
+
 
 
