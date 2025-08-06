@@ -14,17 +14,17 @@ def load_data(uploaded_file):
         df['heure'] = pd.to_datetime(df['heure'], format='%H:%M:%S', errors='coerce').dt.hour
 
     def detect_bottype(ua):
-    ua = str(ua).lower()
-    if "google" in ua:
-        return "Googlebot"
-    elif "semrush" in ua:
-        return "SemrushBot"
-    elif "ahrefs" in ua:
-        return "AhrefsBot"
-    elif "bot" in ua or "spider" in ua or "crawl" in ua:
-        return "OtherBot"
-    else:
-        return "Human"
+        ua = str(ua).lower()
+        if "google" in ua:
+            return "Googlebot"
+        elif "semrush" in ua:
+            return "SemrushBot"
+        elif "ahrefs" in ua:
+            return "AhrefsBot"
+        elif "bot" in ua or "spider" in ua or "crawl" in ua:
+            return "OtherBot"
+        else:
+            return "Human"
 
 if 'user-agent' in df.columns:
     df['bottype'] = df['user-agent'].apply(detect_bottype)
@@ -160,6 +160,7 @@ def overview_page(df):
             st.plotly_chart(chart['fig'], use_container_width=True)
     else:
         st.info("Aucun graphique personnalisé ajouté.")
+
 
 
 
