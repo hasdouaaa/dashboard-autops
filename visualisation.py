@@ -26,9 +26,11 @@ def load_data(uploaded_file):
         else:
             return "Human"
 
-if 'user-agent' in df.columns:
-    df['bottype'] = df['user-agent'].apply(detect_bottype)
+    if 'user-agent' in df.columns:
+        df['bottype'] = df['user-agent'].apply(detect_bottype)
+
     return df
+
 
 def apply_filters(df):
     st.sidebar.header("🔍 Filtres")
@@ -52,16 +54,15 @@ def apply_filters(df):
             df = df[df['heure'].isin(selected)]
 
     if 'bottype' in df.columns:
-    st.sidebar.markdown("### 🧠 Type de visiteur")
-    bot_filter = st.sidebar.radio("Filtrer par :", ["Tous", "Humain", "Bots"])
-
-    if bot_filter == "Humain":
-        df = df[df['bottype'] == "Human"]
-    elif bot_filter == "Bots":
-        df = df[df['bottype'] != "Human"]
-
+        st.sidebar.markdown("### 🧠 Type de visiteur")
+        bot_filter = st.sidebar.radio("Filtrer par :", ["Tous", "Humain", "Bots"])
+        if bot_filter == "Humain":
+            df = df[df['bottype'] == "Human"]
+        elif bot_filter == "Bots":
+            df = df[df['bottype'] != "Human"]
 
     return df
+
 
 def visualisation_page(df):
     df = apply_filters(df)
@@ -75,7 +76,6 @@ def visualisation_page(df):
         csv = df.to_csv(index=False).encode('utf-8')
         st.download_button("⬇️ Télécharger les données filtrées", csv, "data_filtree.csv", "text/csv")
 
-    # Graphes fixes
     if 'heure' in df.columns and 'ip' in df.columns:
         st.subheader("1️⃣ Nombre d’IP par heure")
         data = df.groupby('heure')['ip'].nunique().reset_index()
@@ -118,6 +118,7 @@ def visualisation_page(df):
         data.columns = ['bottype', 'nb_user_agent']
         st.plotly_chart(px.bar(data, x='bottype', y='nb_user_agent', color='bottype'))
 
+
 def custom_visualisation(df):
     if 'custom_charts' not in st.session_state:
         st.session_state['custom_charts'] = []
@@ -148,9 +149,9 @@ def custom_visualisation(df):
         st.plotly_chart(fig, use_container_width=True)
         st.session_state['custom_charts'].append({'title': title, 'fig': fig})
 
+
 def overview_page(df):
     st.header("🧾 Vue d’ensemble :")
-
     visualisation_page(df)
 
     if 'custom_charts' in st.session_state and st.session_state['custom_charts']:
@@ -160,6 +161,8 @@ def overview_page(df):
             st.plotly_chart(chart['fig'], use_container_width=True)
     else:
         st.info("Aucun graphique personnalisé ajouté.")
+
+
 
 
 
